@@ -116,3 +116,8 @@ export async function getAllDownloads(): Promise<{ downloads: DownloadStatus[] }
   const res = await fetch(`${API_BASE}/downloads`);
   return res.json();
 }
+
+export async function stopAllDownloads(): Promise<{ stopped: string[]; count: number }> {
+  const res = await fetch(`${API_BASE}/downloads/stop`, { method: 'POST' });
+  return res.json();
+}

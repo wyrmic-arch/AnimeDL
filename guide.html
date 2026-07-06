@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AnimeDL — Setup Guide</title>
+<style>
+@page {
+  size: A4;
+  margin: 0;
+}
+@page :first {
+  @top-left { content: none }
+  @top-right { content: none }
+  @bottom-left { content: none }
+  @bottom-right { content: none }
+}
+@page :blank {
+  @top-left { content: none }
+  @top-right { content: none }
+  @bottom-left { content: none }
+  @bottom-right { content: none }
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: local('Inter'), url(https://fonts.cdnfonts.com/s/19795/Inter_18pt-Regular.woff) format('woff');
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Inter';
+  src: local('Inter'), url(https://fonts.cdnfonts.com/s/19795/Inter_18pt-Bold.woff) format('woff');
+  font-weight: 700;
+}
+@font-face {
+  font-family: 'Inter';
+  src: local('Inter'), url(https://fonts.cdnfonts.com/s/19795/Inter_18pt-ExtraBold.woff) format('woff');
+  font-weight: 800;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', 'SF Pro Display', -apple-system, sans-serif;
+  color: #1a1a1a;
+  background: #fff;
+  line-height: 1.6;
+  font-size: 10pt;
+}
+
+/* ── Cover Page ── */
+.cover {
+  page-break-after: always;
+  height: 297mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #0a0a0a;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(0deg, rgba(255,255,255,0.015) 1px, transparent 1px) 0 0 / 40px 40px;
+  pointer-events: none;
+}
+.cover-grid {
+  position: absolute;
+  top: 40px; left: 40px; right: 40px; bottom: 40px;
+  border: 1px solid rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+.cover-grid-inner {
+  position: absolute;
+  top: 20px; left: 20px; right: 20px; bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.03);
+  pointer-events: none;
+}
+
+.cover-logo {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+.cover-logo pre {
+  font-family: 'Courier New', monospace;
+  font-size: 11pt;
+  line-height: 1.3;
+  color: #fff;
+  letter-spacing: 1px;
+  margin-bottom: 32px;
+}
+.cover-logo h1 {
+  font-size: 48pt;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+.cover-logo .subtitle {
+  font-size: 11pt;
+  font-weight: 400;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.cover-line {
+  width: 60px;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  margin: 28px auto;
+}
+.cover-info {
+  position: absolute;
+  bottom: 60px;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: 8pt;
+  color: rgba(255,255,255,0.15);
+  letter-spacing: 0.05em;
+}
+
+/* ── Content Pages ── */
+.content {
+  padding: 50px 60px 50px 60px;
+  page-break-after: always;
+  position: relative;
+}
+.content::after {
+  content: '';
+  position: absolute;
+  top: 40px; left: 40px; right: 40px; bottom: 40px;
+  border: 1px solid #eee;
+  pointer-events: none;
+}
+
+/* running header */
+.page-header {
+  font-size: 7pt;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 40px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+}
+
+h2 {
+  font-size: 22pt;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  color: #0a0a0a;
+}
+h2 .num {
+  font-size: 10pt;
+  color: #ccc;
+  display: block;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+h3 {
+  font-size: 13pt;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+h4 {
+  font-size: 9pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+p {
+  color: #555;
+  font-size: 9.5pt;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+p.lead {
+  font-size: 11pt;
+  color: #333;
+}
+
+/* code blocks */
+code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 8.5pt;
+  background: #f5f5f5;
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: #1a1a1a;
+}
+pre {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 8pt;
+  background: #f7f7f7;
+  padding: 14px 16px;
+  margin: 12px 0;
+  line-height: 1.5;
+  color: #333;
+  border-left: 2px solid #ddd;
+}
+
+/* tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 9pt;
+}
+th {
+  text-align: left;
+  font-weight: 700;
+  font-size: 8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #888;
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+}
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  color: #444;
+}
+td:first-child {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* step cards */
+.steps { margin: 16px 0; }
+.step {
+  display: flex;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  font-size: 20pt;
+  font-weight: 800;
+  color: #e0e0e0;
+  line-height: 1;
+  min-width: 36px;
+  font-family: monospace;
+}
+.step-body h4 {
+  margin-bottom: 2px;
+}
+.step-body p {
+  margin-bottom: 0;
+  font-size: 9pt;
+}
+.step-body .note {
+  font-size: 8pt;
+  color: #999;
+  margin-top: 3px;
+}
+
+/* feature grid */
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+  margin: 16px 0;
+}
+.feature-item {
+  width: 50%;
+  padding: 14px 16px;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+.feature-item strong {
+  display: block;
+  font-size: 9.5pt;
+  margin-bottom: 2px;
+}
+.feature-item span {
+  font-size: 8pt;
+  color: #888;
+}
+
+/* routes table */
+.route-table td:first-child {
+  font-family: 'SF Mono', monospace;
+  font-size: 9pt;
+}
+
+/* tip box */
+.tip {
+  background: #fafafa;
+  border-left: 2px solid #ccc;
+  padding: 14px 16px;
+  margin: 14px 0;
+}
+.tip strong {
+  display: block;
+  font-size: 8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  margin-bottom: 4px;
+}
+.tip p {
+  margin-bottom: 0;
+  font-size: 9pt;
+}
+
+.struct {
+  font-family: 'SF Mono', monospace;
+  font-size: 8.5pt;
+  line-height: 1.6;
+  color: #444;
+  padding: 14px 16px;
+  background: #fafafa;
+  border-left: 2px solid #ddd;
+}
+
+/* separator */
+.sep {
+  width: 40px;
+  height: 1px;
+  background: #ddd;
+  margin: 24px 0;
+}
+
+.page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ COVER ═══════════════ -->
+<section class="cover">
+  <div class="cover-grid">
+    <div class="cover-grid-inner"></div>
+  </div>
+  <div class="cover-logo">
+    <pre>
+ ██████  ████████  ███████  ██████   ██████
+ ██    ██ ██    ██ ██    ██ ██    ██ ██
+ ██    ██ ████████ ██    ██ ██████   ██████
+ ██    ██ ██    ██ ██    ██ ██    ██     ██
+ ██████  ██    ██  ██████  ██████   ██████
+    </pre>
+    <h1>AnimeDL</h1>
+    <div class="cover-line"></div>
+    <p class="subtitle">Self-hosted Anime Downloader</p>
+  </div>
+  <div class="cover-info">
+    Setup Guide &mdash; Version 1.0
+  </div>
+</section>
+
+<!-- ═══════════════ WHAT IS ANIMEDL ═══════════════ -->
+<section class="content">
+  <div class="page-header">
+    <span>AnimeDL</span>
+    <span>Setup Guide</span>
+  </div>
+
+  <h2><span class="num">01</span>What is AnimeDL?</h2>
+  <div class="sep"></div>
+  <p class="lead">
+    AnimeDL is a self-hosted web application that lets you search, browse, and download
+    anime episodes directly to your machine. No ads, no trackers, no accounts.
+    Everything runs locally on your own computer.
+  </p>
+
+  <p>
+    The frontend is a clean black-and-white React interface. The backend is a Python
+    FastAPI server that talks to the Allanime API for episode metadata, then uses
+    yt-dlp to fetch the actual video files from streaming sources.
+  </p>
+
+  <div class="sep"></div>
+
+  <h4>Pages</h4>
+  <table class="route-table">
+    <tr><th>Route</th><th>Page</th><th>What it does</th></tr>
+    <tr><td>/</td><td>Home</td><td>Trending + popular shows, genre filters, search bar</td></tr>
+    <tr><td>/search</td><td>Search</td><td>Text search with genre filters and results grid</td></tr>
+    <tr><td>/anime/:id</td><td>Detail</td><td>Episode grid, dub/sub toggle, quality selector, batch download</td></tr>
+    <tr><td>/downloads</td><td>Downloads</td><td>Active download progress, stop all, completed history</td></tr>
+    <tr><td>/history</td><td>History</td><td>Previously downloaded shows — click to resume</td></tr>
+    <tr><td>/setup</td><td>Setup</td><td>In-app guide (this document is the offline version)</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════════ PREREQUISITES ═══════════════ -->
+<section class="content">
+  <div class="page-header">
+    <span>AnimeDL</span>
+    <span>Setup Guide</span>
+  </div>
+
+  <h2><span class="num">02</span>Prerequisites</h2>
+  <div class="sep"></div>
+  <p>Before you can run AnimeDL, you need these four tools installed on your system:</p>
+
+  <table>
+    <tr><th>Tool</th><th>Version</th><th>Purpose</th></tr>
+    <tr><td>Python</td><td>3.11+</td><td>Runs the FastAPI backend server</td></tr>
+    <tr><td>Node.js</td><td>20+</td><td>Runs the Vite frontend dev server</td></tr>
+    <tr><td>yt-dlp</td><td>latest</td><td>Downloads video from streaming sources</td></tr>
+    <tr><td>ffmpeg</td><td>latest</td><td>Merges separate video and audio streams (DASH)</td></tr>
+  </table>
+
+  <div class="sep"></div>
+
+  <h4>Installation</h4>
+
+  <pre># Python / yt-dlp
+pip install yt-dlp
+
+# ffmpeg (pick one for your OS)
+sudo apt install ffmpeg          # Debian / Ubuntu
+sudo pacman -S ffmpeg            # Arch Linux
+brew install ffmpeg              # macOS
+
+# Node.js — download from https://nodejs.org or use nvm</pre>
+
+  <div class="tip">
+    <strong>Verify</strong>
+    <p>Run <code>python3 --version</code>, <code>node --version</code>, <code>yt-dlp --version</code>,
+    and <code>ffmpeg -version</code> to confirm everything is installed.</p>
+  </div>
+</section>
+
+<!-- ═══════════════ QUICK START ═══════════════ -->
+<section class="content">
+  <div class="page-header">
+    <span>AnimeDL</span>
+    <span>Setup Guide</span>
+  </div>
+
+  <h2><span class="num">03</span>Quick Start</h2>
+  <div class="sep"></div>
+
+  <p>From a terminal:</p>
+
+  <pre># 1. Clone the repository
+git clone https://github.com/wyrmic-arch/AnimeDL.git
+cd AnimeDL
+
+# 2. Install backend dependencies
+cd backend
+pip install -r requirements.txt
+cd ..
+
+# 3. Install frontend dependencies
+cd frontend
+npm install
+cd ..
+
+# 4. Start both servers
+bash start.sh</pre>
+
+  <p>Open <strong>http://localhost:5173</strong> in your browser.</p>
+
+  <div class="sep"></div>
+
+  <h4>Stopping the Servers</h4>
+
+  <pre>kill $(lsof -ti:8000) $(lsof -ti:5173) 2>/dev/null</pre>
+
+  <div class="tip">
+    <strong>Persistent Daemons</strong>
+    <p>Both servers run as daemons (via <code>setsid</code>) — they survive terminal
+    disconnects. Use the kill command above to stop them.</p>
+  </div>
+</section>
+
+<!-- ═══════════════ WORKFLOW ═══════════════ -->
+<section class="content">
+  <div class="page-header">
+    <span>AnimeDL</span>
+    <span>Setup Guide</span>
+  </div>
+
+  <h2><span class="num">04</span>How to Use</h2>
+  <div class="sep"></div>
+  <p class="lead">The download workflow is straightforward: search, select, download, watch.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <h4>Search</h4>
+        <p>Use the search bar on the home page, or browse trending and popular shows.
+        Filter by genre to narrow down your options.</p>
+        <p class="note">Every result shows the cover image, episode count, and dub availability.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <h4>Select</h4>
+        <p>Choose Dub or Sub mode, pick your preferred quality, and select individual
+        episodes — or use "Select All" for a full batch.</p>
+        <p class="note">Previously downloaded episodes are marked with a check and a strikethrough.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <h4>Download</h4>
+        <p>Hit the download button. Multiple episodes run in parallel (up to 3 at a time).
+        Progress is shown in real time — the episode number gradually turns white.</p>
+        <p class="note">You can stop all active downloads from the Downloads page at any time.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <h4>Watch</h4>
+        <p>Find your files in the destination folder (default: <code>~/Videos/anime/</code>).
+        Each show gets its own subfolder; files are named by episode number.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FEATURES ═══════════════ -->
+<section class="content">
+  <div class="page-header">
+    <span>AnimeDL</span>
+    <span>Setup Guide</span>
+  </div>
+
+  <h2><span class="num">05</span>Features</h2>
+  <div class="sep"></div>
+
+  <div class="features">
+    <div class="feature-item">
+      <strong>Search</strong>
+      <span>Find any anime by name or filter by genre</span>
+    </div>
+    <div class="feature-item">
+      <strong>Trending / Popular</strong>
+      <span>Browse what's hot right now on the home page</span>
+    </div>
+    <div class="feature-item">
+      <strong>Cover Images</strong>
+      <span>Thumbnails, descriptions, genres, and status badges</span>
+    </div>
+    <div class="feature-item">
+      <strong>Dub / Sub Toggle</strong>
+      <span>Switch between English dub and subbed episodes</span>
+    </div>
+    <div class="feature-item">
+      <strong>Quality Selection</strong>
+      <span>Choose 360p, 480p, 720p, 1080p, or best available</span>
+    </div>
+    <div class="feature-item">
+      <strong>Batch Download</strong>
+      <span>Select multiple episodes; runs up to 3 in parallel</span>
+    </div>
+    <div class="feature-item">
+      <strong>Real-time Progress</strong>
+      <span>Episode numbers fade toward white as they download</span>
+    </div>
+    <div class="feature-item">
+      <strong>Stop All</strong>
+      <span>Cancel every active download with one click</span>
+    </div>
+    <div class="feature-item">
+      <strong>Download History</strong>
+      <span>Every completed episode is saved — pick up where you left off</span>
+    </div>
+    <div class="feature-item">
+      <strong>Search History</strong>
+      <span>Recent searches appear in the dropdown when you focus the search bar</span>
+    </div>
+    <div class="feature-item">
+      <strong>Recommendations</strong>
+      <span>Trending shows shown in the search dropdown for discovery</span>
+    </div>
+    <div class="feature-item">
+      <strong>Custom Destination</strong>
+      <span>Choose where downloaded files are saved on your machine</span>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <h4>Search Dropdown</h4>
+  <p>Clicking the search input opens a dropdown with your recent search history
+  (with a CLEAR button) and trending recommendations with cover images and
+  episode counts. Click any item to jump directly to that show or search.</p>
+</section>
+
+<!-- ═══════════════ TIPS ═══════════════ -->
+<section class="content">
+  <div class="page-header">
+    <span>AnimeDL</span>
+    <span>Setup Guide</span>
+  </div>
+
+  <h2><span class="num">06</span>Tips &amp; Notes</h2>
+  <div class="sep"></div>
+
+  <div class="tip">
+    <strong>English Dub</strong>
+    <p>English dubs are preferred when available. The Dub tab shows all episodes
+    with English audio. The Sub tab shows original Japanese with subtitles.</p>
+  </div>
+
+  <div class="tip">
+    <strong>Surviving Disconnects</strong>
+    <p>Both servers run as daemons using <code>setsid</code>. You can close the terminal
+    or SSH session — the servers keep running. Use the kill command to stop them.</p>
+  </div>
+
+  <div class="tip">
+    <strong>Resume Downloads</strong>
+    <p>If a download is interrupted (e.g., you stop all downloads or the server restarts),
+    yt-dlp will resume partial files on the next attempt. No need to re-download
+    from scratch.</p>
+  </div>
+
+  <div class="tip">
+    <strong>History Persistence</strong>
+    <p>Download history and search history are stored in your browser's localStorage.
+    Clearing your browser data will clear it. The History page lets you pick up
+    where you left off on any show.</p>
+  </div>
+
+  <div class="tip">
+    <strong>Source Priority</strong>
+    <p>The backend tries multiple source servers for each episode. Direct links from
+    tools.fast4speed.rsvp are preferred (fastest and most reliable). If a source
+    fails, the next one is tried automatically.</p>
+  </div>
+
+  <div class="sep"></div>
+
+  <h4>Need Help?</h4>
+  <p>Open an issue on GitHub: <code>https://github.com/wyrmic-arch/AnimeDL/issues</code></p>
+</section>
+
+<!-- ═══════════════ API ═══════════════ -->
+<section class="content">
+  <div class="page-header">
+    <span>AnimeDL</span>
+    <span>Setup Guide</span>
+  </div>
+
+  <h2><span class="num">07</span>API Reference</h2>
+  <div class="sep"></div>
+  <p class="lead">The backend exposes a REST API and a WebSocket endpoint. All endpoints
+  are prefixed with <code>/api</code>.</p>
+
+  <table>
+    <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+    <tr><td>GET</td><td>/api/search?q=&amp;genres=&amp;sort_by=</td><td>Search anime by name and genre</td></tr>
+    <tr><td>GET</td><td>/api/trending</td><td>Get trending shows (24 results)</td></tr>
+    <tr><td>GET</td><td>/api/popular</td><td>Get most popular shows (24 results)</td></tr>
+    <tr><td>GET</td><td>/api/anime/{id}</td><td>Full show detail with episodes, description, genres</td></tr>
+    <tr><td>GET</td><td>/api/anime/{id}/sources/{ep}?mode=</td><td>Source URLs for one episode</td></tr>
+    <tr><td>POST</td><td>/api/download</td><td>Start a download task</td></tr>
+    <tr><td>GET</td><td>/api/download/{task_id}</td><td>Check task status</td></tr>
+    <tr><td>GET</td><td>/api/download/{task_id}/file</td><td>Serve completed video file</td></tr>
+    <tr><td>GET</td><td>/api/downloads</td><td>List all download tasks</td></tr>
+    <tr><td>POST</td><td>/api/downloads/stop</td><td>Stop all active downloads</td></tr>
+    <tr><td>WS</td><td>/ws/download/{task_id}</td><td>Real-time download progress stream</td></tr>
+  </table>
+
+  <div class="sep"></div>
+
+  <h4>WebSocket Messages</h4>
+  <p>Each message is a JSON object with the task's current status, progress percentage,
+  download speed, and ETA. The stream stays open until the download finishes or fails.</p>
+</section>
+
+<!-- ═══════════════ PROJECT STRUCTURE ═══════════════ -->
+<section class="content">
+  <div class="page-header">
+    <span>AnimeDL</span>
+    <span>Setup Guide</span>
+  </div>
+
+  <h2><span class="num">08</span>Project Structure</h2>
+  <div class="sep"></div>
+
+  <div class="struct">
+AnimeDL/<br>
+├── backend/<br>
+│ &nbsp; ├── main.py &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # FastAPI routes, CORS, WebSocket<br>
+│ &nbsp; ├── allanime.py &nbsp;&nbsp;&nbsp; # Allanime API client (search, detail, AES decrypt)<br>
+│ &nbsp; ├── downloader.py &nbsp;&nbsp;# yt-dlp subprocess management<br>
+│ &nbsp; ├── models.py &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Pydantic schemas<br>
+│ &nbsp; └── requirements.txt<br>
+├── frontend/<br>
+│ &nbsp; ├── src/<br>
+│ &nbsp; │ &nbsp; ├── App.tsx<br>
+│ &nbsp; │ &nbsp; ├── api.ts &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Typed fetch wrappers<br>
+│ &nbsp; │ &nbsp; ├── history.ts &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # localStorage download/search history<br>
+│ &nbsp; │ &nbsp; ├── pages/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # LandingPage, SearchPage, AnimePage, ...<br>
+│ &nbsp; │ &nbsp; ├── components/ &nbsp;&nbsp;&nbsp; # AnimeCard, Navbar, SearchDropdown<br>
+│ &nbsp; │ &nbsp; └── styles/global.css<br>
+│ &nbsp; └── package.json<br>
+├── start.sh<br>
+├── guide.html &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # This document (HTML source)<br>
+├── guide.pdf &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # This document (PDF)<br>
+└── README.md
+  </div>
+</section>
+
+<!-- ═══════════════ LICENSE ═══════════════ -->
+<section class="content">
+  <div class="page-header">
+    <span>AnimeDL</span>
+    <span>Setup Guide</span>
+  </div>
+
+  <h2><span class="num">09</span>License</h2>
+  <div class="sep"></div>
+  <p class="lead">
+    AnimeDL is open source and distributed under the MIT License.
+  </p>
+  <p>
+    Copyright &copy; 2026 wyrmic-arch
+  </p>
+  <p>
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions...
+  </p>
+  <p>
+    The full license text is available in the <code>LICENSE</code> file in the
+    repository root.
+  </p>
+
+  <div class="sep"></div>
+
+  <h4>Built With</h4>
+  <table>
+    <tr><td><a href="https://fastapi.tiangolo.com/">FastAPI</a></td><td>Python web framework</td></tr>
+    <tr><td><a href="https://react.dev/">React</a> + <a href="https://vite.dev/">Vite</a></td><td>Frontend framework and build tool</td></tr>
+    <tr><td><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a></td><td>Video download engine</td></tr>
+    <tr><td><a href="https://allanime.to/">Allanime</a></td><td>Anime metadata API</td></tr>
+  </table>
+</section>
+
+</body>
+</html>

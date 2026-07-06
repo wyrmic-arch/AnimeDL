@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
-import { getAllDownloads, type DownloadStatus } from '../api'
+import { getAllDownloads, stopAllDownloads, type DownloadStatus } from '../api'
 
 export default function DownloadsPage() {
   const [downloads, setDownloads] = useState<DownloadStatus[]>([])
+  const [stopping, setStopping] = useState(false)
   const wsRef = useRef<WebSocket | null>(null)
 
   useEffect(() => {
@@ -14,7 +15,15 @@ export default function DownloadsPage() {
   }, [])
 
   const active = downloads.filter(d => d.status === 'downloading' || d.status === 'queued')
-  const done = downloads.filter(d => d.status === 'done' || d.status === 'failed')
+  const done = downloads.filter(d => d.status === 'done' || d.status === 'failed' || d.status === 'cancelled')
+
+  const handleStopAll = async () => {
+    setStopping(true)
+    await stopAllDownloads()
+    const data = await getAllDownloads()
+    setDownloads(data.downloads || [])
+    setStopping(false)
+  }
 
   return (
     <div className="page">
@@ -30,9 +39,26 @@ export default function DownloadsPage() {
 
         {active.length > 0 && (
           <section style={{ marginBottom: 40 }}>
-            <h2 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Active ({active.length})
-            </h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <h2 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Active ({active.length})
+              </h2>
+              <button
+                onClick={handleStopAll}
+                disabled={stopping}
+                style={{
+                  padding: '6px 16px',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'transparent',
+                  color: stopping ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.5)',
+                  cursor: stopping ? 'default' : 'pointer',
+                }}
+              >
+                {stopping ? 'STOPPING...' : 'STOP ALL'}
+              </button>
+            </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {active.map(d => (
                 <DownloadItem key={d.task_id} item={d} />
@@ -145,10 +171,10 @@ function DoneItem({ item }: { item: DownloadStatus }) {
       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
         {filesize && <span style={{ color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>{filesize}</span>}
         <span style={{
-          color: item.status === 'done' ? 'rgba(255,255,255,0.5)' : 'rgba(255,100,100,0.7)',
+          color: item.status === 'done' ? 'rgba(255,255,255,0.5)' : item.status === 'cancelled' ? 'rgba(255,255,255,0.2)' : 'rgba(255,100,100,0.7)',
           fontSize: '0.75rem',
         }}>
-          {item.status === 'done' ? 'Done' : 'Failed'}
+          {item.status === 'done' ? 'Done' : item.status === 'cancelled' ? 'Cancelled' : 'Failed'}
         </span>
       </div>
     </div>

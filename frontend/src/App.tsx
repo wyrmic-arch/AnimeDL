@@ -4,6 +4,8 @@ import LandingPage from './pages/LandingPage'
 import SearchPage from './pages/SearchPage'
 import AnimePage from './pages/AnimePage'
 import DownloadsPage from './pages/DownloadsPage'
+import HistoryPage from './pages/HistoryPage'
+import SetupPage from './pages/SetupPage'
 
 export default function App() {
   return (
@@ -14,6 +16,8 @@ export default function App() {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/anime/:id" element={<AnimePage />} />
         <Route path="/downloads" element={<DownloadsPage />} />
+        <Route path="/history" element={<HistoryPage />} />
+        <Route path="/setup" element={<SetupPage />} />
       </Routes>
     </>
   )

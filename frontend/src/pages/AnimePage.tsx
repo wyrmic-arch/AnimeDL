@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { getAnimeDetail, getAllDownloads, startDownload, type AnimeDetail, type DownloadStatus } from '../api'
+import { addDownloadedEpisodes } from '../history'
 
 interface EpisodeCheck {
   num: string
@@ -67,6 +68,9 @@ export default function AnimePage() {
           setActiveDownloads(prev => prev.map(t => t.task_id === data.task_id ? { ...t, ...data } : t))
           if (data.status === 'done') {
             setCompletedIds(p => new Set(p).add(data.task_id))
+            if (anime) {
+              addDownloadedEpisodes(id!, anime.name, anime.thumbnail || '', mode, [data.episode])
+            }
             ws.close()
             wsRefs.current.delete(task.task_id)
           } else if (data.status === 'failed') {

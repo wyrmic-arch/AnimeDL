@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AnimeCard from '../components/AnimeCard'
-import { getTrending, getPopular, searchAnime, type SearchResult } from '../api'
+import SearchDropdown from '../components/SearchDropdown'
+import { getTrending, getPopular, type SearchResult } from '../api'
 
 const GENRES = [
   'Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror',
@@ -13,14 +14,12 @@ export default function LandingPage() {
   const nav = useNavigate()
   const [trending, setTrending] = useState<SearchResult[]>([])
   const [popular, setPopular] = useState<SearchResult[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
   const [selectedGenre, setSelectedGenre] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     Promise.all([getTrending(), getPopular()])
       .then(([t, p]) => {
-        // Shuffle trending slightly for variety
         setTrending(t.sort(() => Math.random() - 0.5))
         setPopular(p)
       })
@@ -28,11 +27,8 @@ export default function LandingPage() {
       .finally(() => setLoading(false))
   }, [])
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      nav(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
-    }
+  const handleSearch = (q: string) => {
+    if (q.trim()) nav(`/search?q=${encodeURIComponent(q.trim())}`)
   }
 
   const handleGenreClick = (genre: string) => {
@@ -68,44 +64,9 @@ export default function LandingPage() {
             Search, select, download. Browse trending anime or find something new.
           </p>
 
-          <form onSubmit={handleSearch} style={{ maxWidth: 520, margin: '0 auto' }}>
-            <div style={{
-              display: 'flex',
-              borderBottom: '1px solid rgba(255,255,255,0.15)',
-              transition: 'border-color 0.15s',
-            }}>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Search any anime..."
-                style={{
-                  flex: 1,
-                  padding: '14px 0',
-                  fontSize: '1.1rem',
-                  fontWeight: 400,
-                  background: 'none',
-                  border: 'none',
-                  outline: 'none',
-                  color: '#fff',
-                }}
-              />
-              <button
-                type="submit"
-                style={{
-                  padding: '14px 24px',
-                  fontSize: '0.85rem',
-                  fontWeight: 600,
-                  border: 'none',
-                  background: 'transparent',
-                  color: searchQuery.trim() ? '#fff' : 'rgba(255,255,255,0.2)',
-                  cursor: searchQuery.trim() ? 'pointer' : 'default',
-                }}
-              >
-                SEARCH
-              </button>
-            </div>
-          </form>
+          <div style={{ maxWidth: 520, margin: '0 auto' }}>
+            <SearchDropdown onSearch={handleSearch} />
+          </div>
 
           {/* Genre pills */}
           <div style={{

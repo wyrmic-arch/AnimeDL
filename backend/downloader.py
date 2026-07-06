@@ -8,6 +8,7 @@ from typing import Any
 
 downloading: dict[str, Any] = {}
 completed: list[dict] = []
+_processes: dict[str, asyncio.subprocess.Process] = {}
 
 
 def sanitize_filename(name: str) -> str:
@@ -42,6 +43,8 @@ async def run_download(
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
+
+        _processes[task_id] = proc
 
         last_update = time.time()
         if proc.stdout is None:
@@ -97,10 +100,31 @@ async def run_download(
             task["error"] = stderr_data
             downloading[task_id] = task
 
+    except asyncio.CancelledError:
+        task["status"] = "cancelled"
+        downloading[task_id] = task
     except Exception as e:
         task["status"] = "failed"
         task["error"] = str(e)[:500]
         downloading[task_id] = task
+    finally:
+        _processes.pop(task_id, None)
+
+
+def stop_all_downloads() -> list[str]:
+    stopped = []
+    for task_id, proc in list(_processes.items()):
+        try:
+            proc.terminate()
+        except Exception:
+            pass
+        task = downloading.get(task_id)
+        if task:
+            task["status"] = "cancelled"
+            downloading[task_id] = task
+        stopped.append(task_id)
+    _processes.clear()
+    return stopped
 
 
 async def download_episodes(

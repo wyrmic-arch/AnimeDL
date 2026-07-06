@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
 from allanime import get_episode_sources, get_show_detail, pick_best_source, search_anime
-from downloader import download_episodes, get_all_downloads, get_task_status, downloading
+from downloader import download_episodes, get_all_downloads, get_task_status, downloading, stop_all_downloads
 from models import DownloadRequest
 
 app = FastAPI(title="Anime Downloader")
@@ -131,6 +131,12 @@ async def serve_file(task_id: str):
 @app.get("/api/downloads")
 async def all_downloads():
     return {"downloads": get_all_downloads()}
+
+
+@app.post("/api/downloads/stop")
+async def stop_downloads():
+    stopped = stop_all_downloads()
+    return {"stopped": stopped, "count": len(stopped)}
 
 
 ws_clients: dict[str, list[WebSocket]] = {}
